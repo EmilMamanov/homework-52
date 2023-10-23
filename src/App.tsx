@@ -1,35 +1,56 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import './App.css';
+import CardDeck from './lib/CardDeck';
+import Card from './lib/Card';
+import PokerHand from './lib/PokerHands';
+import { useState } from 'react';
+
+const cardDeck = new CardDeck();
 
 function App() {
-  const [count, setCount] = useState(0)
+    const [drawnCards, setDrawnCards] = useState<Card[]>([]);
 
-  return (
-    <>
-      <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          ураурадавай давай
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
+    const drawCard = () => {
+        try {
+            const card = cardDeck.getCard();
+            setDrawnCards([...drawnCards, card]);
+        } catch (error) {
+            console.error(error);
+        }
+    };
+
+    const drawMultipleCards = () => {
+        try {
+            const numCards = 5;
+            const cards = cardDeck.getCards(numCards);
+            setDrawnCards([...drawnCards, ...cards]);
+        } catch (error) {
+            console.error(error);
+        }
+    };
+
+    const pokerHand = new PokerHand(drawnCards);
+    const outcome = pokerHand.getOutcome();
+
+    return (
+        <div className="App playingCards faceImages">
+            <h1>Poker</h1>
+            <button onClick={drawCard}>Draw a Card</button>
+            <button onClick={drawMultipleCards}>Draw 5 Cards</button>
+            <div className="drawn-cards">
+                <h2>Drawn Cards:</h2>
+                <ul>
+                    {drawnCards.map((card, index) => (
+                        <li key={index}>{`${card.rank} of ${card.suit}`}</li>
+                    ))}
+                </ul>
+            </div>
+
+            <div className="poker-hand">
+                <h2>Poker Hand:</h2>
+                <p>{outcome}</p>
+            </div>
+        </div>
+    );
 }
 
-export default App
+export default App;
