@@ -22,11 +22,6 @@ function App() {
         setCards(dealtCards);
     };
 
-    const getHandOutcome = () => {
-        const pokerHand = new PokerHand(cards);
-        return pokerHand.getOutcome();
-    };
-
     return (
         <div className="App playingCards faceImages">
             <h1>Poker</h1>
@@ -35,13 +30,16 @@ function App() {
                 {cards.length === 0 ? (
                     <p>Нажмите кнопку "Раздать карты" для начала игры.</p>
                 ) : (
-                    cards.map((card, index) => (
-                        <Card
-                            key={index}
-                            rank={card.rank}
-                            suit={card.suit}
-                        />
-                    ))
+                    <>
+                        <p>Текущая комбинация: {new PokerHand(cards).getOutcome()}</p>
+                        {cards.map((card, index) => (
+                            <Card
+                                key={index}
+                                rank={card.rank}
+                                suit={card.suit}
+                            />
+                        ))}
+                    </>
                 )}
             </div>
         </div>
