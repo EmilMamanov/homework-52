@@ -20,9 +20,9 @@ const getSuitSymbol = (suit: CardProps['suit']) => {
     }
 };
 
-const Card: React.FC<CardProps> = ({ rank, suit }) => {
+const Cards: React.FC<CardProps> = ({ rank, suit }) => {
     return (
-        <span className={`card rank-${rank} ${suit}`}>
+        <span className={`card rank-${rank as string} ${suit as string}`}>
           <span className="rank">{rank}</span>
           <span className={`suit suit-${suit}`}>{getSuitSymbol(suit)}</span>
         </span>
@@ -30,4 +30,4 @@ const Card: React.FC<CardProps> = ({ rank, suit }) => {
     );
 };
 
-export default Card;
+export default Cards;

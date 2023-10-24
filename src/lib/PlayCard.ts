@@ -1,4 +1,4 @@
-export default class Card {
+class PlayCard {
     public rank: string;
     public suit: string;
 
@@ -7,3 +7,5 @@ export default class Card {
         this.suit = suit;
     }
 }
+
+export default PlayCard;

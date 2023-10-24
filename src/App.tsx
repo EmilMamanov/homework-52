@@ -1,53 +1,48 @@
 import './App.css';
-import CardDeck from './lib/CardDeck';
-import Card from './lib/Card';
-import PokerHand from './lib/PokerHands';
 import { useState } from 'react';
-
-const cardDeck = new CardDeck();
+import CardDeck from './lib/CardDeck';
+import Card from './Card';
+import PlayCard from './lib/PlayCard';
+import PokerHand from './lib/PokerHand';
 
 function App() {
-    const [drawnCards, setDrawnCards] = useState<Card[]>([]);
+    const [cards, setCards] = useState<PlayCard[]>([]);
 
-    const drawCard = () => {
-        try {
-            const card = cardDeck.getCard();
-            setDrawnCards([...drawnCards, card]);
-        } catch (error) {
-            console.error(error);
+    const dealCards = () => {
+        const deck = new CardDeck();
+        const dealtCards: PlayCard[] = [];
+
+        for (let i = 0; i < 5; i++) {
+            const card = deck.getCard();
+            if (card) {
+                dealtCards.push(card);
+            }
         }
+
+        setCards(dealtCards);
     };
 
-    const drawMultipleCards = () => {
-        try {
-            const numCards = 5;
-            const cards = cardDeck.getCards(numCards);
-            setDrawnCards([...drawnCards, ...cards]);
-        } catch (error) {
-            console.error(error);
-        }
+    const getHandOutcome = () => {
+        const pokerHand = new PokerHand(cards);
+        return pokerHand.getOutcome();
     };
-
-    const pokerHand = new PokerHand(drawnCards);
-    const outcome = pokerHand.getOutcome();
 
     return (
         <div className="App playingCards faceImages">
             <h1>Poker</h1>
-            <button onClick={drawCard}>Draw a Card</button>
-            <button onClick={drawMultipleCards}>Draw 5 Cards</button>
-            <div className="drawn-cards">
-                <h2>Drawn Cards:</h2>
-                <ul>
-                    {drawnCards.map((card, index) => (
-                        <li key={index}>{`${card.rank} of ${card.suit}`}</li>
-                    ))}
-                </ul>
-            </div>
-
-            <div className="poker-hand">
-                <h2>Poker Hand:</h2>
-                <p>{outcome}</p>
+            <button onClick={dealCards}>Раздать карты</button>
+            <div className="playingCards faceImages">
+                {cards.length === 0 ? (
+                    <p>Нажмите кнопку "Раздать карты" для начала игры.</p>
+                ) : (
+                    cards.map((card, index) => (
+                        <Card
+                            key={index}
+                            rank={card.rank}
+                            suit={card.suit}
+                        />
+                    ))
+                )}
             </div>
         </div>
     );
